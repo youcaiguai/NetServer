@@ -37,8 +37,7 @@ A C++ High Performance NetServer (version 0.1.0)
 
 
 ## Performance Test
- * 本项目采用了两款开源的HTTP压力测试工具“wrk”和“WebBench”进行测试
-    其中使用了linya改写后的[WebBench](https://github.com/linyacool/WebBench)
+ * 本项目采用了两款开源的HTTP压力测试工具“wrk”和“WebBench”进行测试，其中使用了linya改写后的[WebBench](https://github.com/linyacool/WebBench)
  * 测试方法
    * 模拟1000条TCP连接，持续时间30s
    * 测试长连接情况
