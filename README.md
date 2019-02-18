@@ -52,7 +52,7 @@ A C++ High Performance NetServer (version 0.1.0)
    * OS: CentOS Linux release 7.0.1406
    * kernel: 3.10.0-123.el7.x86_64
   
-* wrk测试结果
+* wrk测试结果：8万+QPS、4万+QPS
   * 内存中的HTTP报文（无磁盘IO影响）
  ![wrk](https://github.com/chenshuaihao/NetServer/blob/master/docs/images/wrk_hello.png)
 
