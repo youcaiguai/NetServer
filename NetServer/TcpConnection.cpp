@@ -21,7 +21,8 @@ TcpConnection::TcpConnection(EventLoop *loop, int fd, struct sockaddr_in clienta
     : loop_(loop),
 	fd_(fd),
     clientaddr_(clientaddr),
-	halfclose_(false)
+	halfclose_(false),
+	disconnected_(false)
 {
 	//创建事件类，并注册事件执行函数
     pchannel_ = new Channel();
@@ -132,11 +133,13 @@ void TcpConnection::HandleWrite()
 
 void TcpConnection::HandleError()
 {
+	if(disconnected_) {return;}
 	errorcallback_(this);
 	//loop_->RemoveChannelToPoller(pchannel_);
 	//连接标记为清理
 	//task添加
 	loop_->AddTask(connectioncleanup_);
+	disconnected_ = true;
 }
 
 //对端关闭连接,有两种，一种close，另一种是shutdown(半关闭)，但服务器并不清楚是哪一种，只能按照最保险的方式来，即发完数据再close
@@ -150,15 +153,21 @@ void TcpConnection::HandleClose()
 	//closecallback_(this);
 
 	//20190217 优雅关闭，发完数据再关闭
-	if(bufferout_.size() > 0)
+	if(disconnected_) {return;}
+	if(bufferout_.size() > 0 || bufferin_.size() > 0)
 	{
 		//如果还有数据待发送，则先发完,设置半关闭标志位
 		halfclose_ = true;
+		if(bufferin_.size() > 0)
+		{
+			messagecallback_(this, bufferin_);
+		}
 	}
 	else
 	{
 		loop_->AddTask(connectioncleanup_);
 		closecallback_(this);
+		disconnected_ = true;
 	}
 }
 

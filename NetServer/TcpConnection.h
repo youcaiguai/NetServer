@@ -62,7 +62,8 @@ private:
     Channel *pchannel_;
     int fd_;
     struct sockaddr_in clientaddr_;
-    bool halfclose_;
+    bool halfclose_; //半关闭标志位
+    bool disconnected_; //已关闭标志位
 
     //读写缓冲
     std::string bufferin_;
